@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsPulse - Global News Trends</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1877f2; }
+        .search-form { text-align: center; margin-bottom: 20px; }
+        .search-form input[type="text"] { width: 50%; padding: 10px; border: 1px solid #ddd; border-radius: 20px; }
+        .search-form button { padding: 10px 20px; border: none; background-color: #1877f2; color: white; border-radius: 20px; cursor: pointer; }
+        
+        .article {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+        .article:last-child { border-bottom: none; }
+
+        .article-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0; 
+        }
+
+        .article-content {
+            flex-grow: 1;
+        }
+        
+        .article-content h2 { margin: 0 0 10px 0; }
+        .article-content h2 a { text-decoration: none; color: #333; }
+        .article-content h2 a:hover { color: #1877f2; }
+        .article-content p { margin: 0 0 10px 0; color: #666; }
+        .meta { font-size: 0.9em; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NewsPulse - Latest Headlines</h1>
+
+        <form action="/" method="get" class="search-form">
+            <input type="text" name="search" placeholder="Search for news..." value="{{ search_query or '' }}">
+            <button type="submit">Search</button>
+        </form>
+
+        {% for article in articles %}
+        <div class="article">
+            {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-image">
+            {% endif %}
+            <div class="article-content">
+                <h2><a href="{{ article.url }}" target="_blank">{{ article.title }}</a></h2>
+                <p>{{ article.description }}</p>
+                <div class="meta">
+                    Published by {{ article.source_name }} on {{ article.publishedAt.strftime('%Y-%m-%d %H:%M') }}
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <p style="text-align: center;">No articles found for your search.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
