@@ -25,20 +25,14 @@ def NewsPulse():
         cursor = connection.cursor(dictionary=True)
         
         if search_query:
-            keywords = preprocess_text(search_query)
+            cleaned_search_query = preprocess_text(search_query)
             
-            if keywords:
+            if cleaned_search_query:
                 sql_query = "SELECT title, description, url, image_url, publishedAt, source_name FROM news_data WHERE "
-                conditions = ["(title LIKE %s OR description LIKE %s)"] * len(keywords)
-                sql_query += " AND ".join(conditions)
+                sql_query += "title LIKE %s OR description LIKE %s"
                 sql_query += " ORDER BY publishedAt DESC"
                 
-                params = []
-                for keyword in keywords:
-                    term = f"%{keyword}%"
-                    params.extend([term, term])
-                
-                cursor.execute(sql_query, tuple(params))
+                cursor.execute(sql_query, (f"%{cleaned_search_query}%", f"%{cleaned_search_query}%"))
             else:
                 articles = []
         else:
